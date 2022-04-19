@@ -163,3 +163,74 @@ TEST_CASE("member_insert") {
         REQUIRE(!has_insert_ret_v<std::map<int, float>, std::pair<std::map<int, float>::iterator, char *>, const std::pair<int, float> &>);
     }
 }
+
+GENERATE_HAS_MEMBER_FUNCTION(operator[], operator_index);
+TEST_CASE("member_operator_index") {
+    SECTION("operator_index_t") {
+        REQUIRE(std::is_same_v<operator_index_t<std::vector<int>, int>, int&>);
+        REQUIRE(std::is_same_v<operator_index_t<std::vector<int *>, int>, int *&>);
+
+        REQUIRE(std::is_same_v<operator_index_t<std::map<int, float>, int>, float&>);
+        REQUIRE(std::is_same_v<operator_index_t<std::map<int, char *>, int>, char *&>);
+    }
+
+    SECTION("has_operator_index")
+    {
+        REQUIRE(std::is_same_v<has_operator_index<std::vector<int>, int>, std::true_type>);
+        REQUIRE(std::is_same_v<has_operator_index<std::vector<std::pair<int, float>>, int>, std::true_type>);
+
+        REQUIRE(std::is_same_v<has_operator_index<std::vector<int>>, std::false_type>);
+        REQUIRE(std::is_same_v<has_operator_index<std::vector<std::pair<int, float>>, std::pair<int, float>>, std::false_type>);
+
+        REQUIRE(std::is_same_v<has_operator_index<std::map<int, float>, int>, std::true_type>);
+        REQUIRE(std::is_same_v<has_operator_index<std::map<std::pair<int, float>, float>, std::pair<int, float>>, std::true_type>);
+
+        REQUIRE(std::is_same_v<has_operator_index<std::map<int, float>, std::pair<int, float>>, std::false_type>);
+        REQUIRE(std::is_same_v<has_operator_index<std::map<std::pair<int, float>, float>, int>, std::false_type>);
+    }
+
+    SECTION("has_operator_index_ret")
+    {
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::vector<int>, int&, int>, std::true_type>);
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::vector<std::pair<int, float>>, std::pair<int, float>&, int>, std::true_type>);
+
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::vector<int>, int, int>, std::false_type>);
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::vector<std::pair<int, float>>, int&, int>, std::false_type>);
+
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::map<int, float>, float&, int>, std::true_type>);
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::map<int, std::pair<int, float>>, std::pair<int, float> &, int>, std::true_type>);
+
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::map<int, float>, float, int>, std::false_type>);
+        REQUIRE(std::is_same_v<has_operator_index_ret<std::map<std::pair<int, float>, float>, std::pair<char*, float>, int>, std::false_type>);
+    }
+
+    SECTION("has_operator_index_v")
+    {
+        REQUIRE(has_operator_index_v<std::vector<int>, int>);
+        REQUIRE(has_operator_index_v<std::vector<std::pair<int, float>>, int>);
+
+        REQUIRE(!has_operator_index_v<std::vector<int>>);
+        REQUIRE(!has_operator_index_v<std::vector<std::pair<int, float>>, std::pair<int, float>>);
+
+        REQUIRE(has_operator_index_v<std::map<int, float>, int>);
+        REQUIRE(has_operator_index_v<std::map<std::pair<int, float>, float>, std::pair<int, float>>);
+
+        REQUIRE(!has_operator_index_v<std::map<int, float>, std::pair<int, float>>);
+        REQUIRE(!has_operator_index_v<std::map<std::pair<int, float>, float>, int>);
+    }
+
+    SECTION("has_operator_index_ret")
+    {
+        REQUIRE(has_operator_index_ret_v<std::vector<int>, int &, int>);
+        REQUIRE(has_operator_index_ret_v<std::vector<std::pair<int, float>>, std::pair<int, float> &, int>);
+
+        REQUIRE(!has_operator_index_ret_v<std::vector<int>, int, int>);
+        REQUIRE(!has_operator_index_ret_v<std::vector<std::pair<int, float>>, int &, int>);
+
+        REQUIRE(has_operator_index_ret_v<std::map<int, float>, float &, int>);
+        REQUIRE(has_operator_index_ret_v<std::map<int, std::pair<int, float>>, std::pair<int, float> &, int>);
+
+        REQUIRE(!has_operator_index_ret_v<std::map<int, float>, float, int>);
+        REQUIRE(!has_operator_index_ret_v<std::map<std::pair<int, float>, float>, std::pair<char *, float>, int>);
+    }
+}
