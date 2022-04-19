@@ -51,8 +51,8 @@ TEST_CASE("is_detected") {
 
     SECTION("detected_t")
     {
-        REQUIRE(std::is_same_v<detected_t<copy_assign_t, CanCopy>, copy_assign_t<CanCopy>>);
-        REQUIRE(std::is_same_v<detected_t<copy_assign_t, CannotCopy>, nullptr_t>);
+        REQUIRE(std::is_same_v<is_detected_t<copy_assign_t, CanCopy>, copy_assign_t<CanCopy>>);
+        REQUIRE(std::is_same_v<is_detected_t<copy_assign_t, CannotCopy>, nullptr_t>);
     }
 
     SECTION("detected_or")

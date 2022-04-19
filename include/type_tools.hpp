@@ -57,9 +57,6 @@ struct detector<Default, std::void_t<Op<Args...>>, Op, Args...>
  */
 template <template <class...> class Op, class... Args>
 using is_detected = typename detector<nullptr_t, void, Op, Args...>::value_t;
-
-template <template <class...> class Op, class... Args>
-inline constexpr bool is_detected_v = is_detected<Op, Args...>::value;
 /**
  * @brief type of Op<Args...> if valid, otherwise nullptr_t
  *
@@ -67,7 +64,9 @@ inline constexpr bool is_detected_v = is_detected<Op, Args...>::value;
  * @tparam Args arguments used by template type
  */
 template <template <class...> class Op, class... Args>
-using detected_t = typename detector<nullptr_t, void, Op, Args...>::type;
+using is_detected_t = typename detector<nullptr_t, void, Op, Args...>::type;
+template <template <class...> class Op, class... Args>
+inline constexpr bool is_detected_v = is_detected<Op, Args...>::value;
 /**
  * @brief type of Op<Args...> if valid, otherwise Default
  *
@@ -123,7 +122,7 @@ inline constexpr bool is_iterable_v = is_iterable<Iter>::value;
     template <typename Class, typename... Args>                                                         \
     using has_##name = is_detected<name##_t, Class, Args...>;                                           \
     template <typename Class, typename Return, typename... Args>                                        \
-    using has_##name##_ret = typename std::is_same<Return, detected_t<name##_t, Class, Args...>>::type; \
+    using has_##name##_ret = typename std::is_same<Return, is_detected_t<name##_t, Class, Args...>>::type; \
                                                                                                         \
     template <typename Class, typename... Args>                                                         \
     inline constexpr bool has_##name##_v = has_##name<Class, Args...>::value;                           \
