@@ -57,12 +57,6 @@ struct detector<Default, std::void_t<Op<Args...>>, Op, Args...>
  */
 template <template <class...> class Op, class... Args>
 using is_detected = typename detector<nullptr_t, void, Op, Args...>::value_t;
-/**
- * @brief type of Op<Args...> if valid, otherwise nullptr_t
- *
- * @tparam Op template type to validate
- * @tparam Args arguments used by template type
- */
 template <template <class...> class Op, class... Args>
 using is_detected_t = typename detector<nullptr_t, void, Op, Args...>::type;
 template <template <class...> class Op, class... Args>
@@ -80,25 +74,15 @@ template <class Default, template <class...> class Op, class... Args>
 using detected_or_t = typename detector<Default, void, Op, Args...>::type;
 
 /**
- * @brief iterator of an iterable type.
- *
- * @tparam Iter, iterable type
- */
-template <typename Iter>
-using is_iterable_t = typename Iter::iterator;
-/**
  * @brief determines if a type is iterable. Equal to std::true_type on
  * success and std::false_type on failure.
  *
  * @tparam Iter, potential iterable type
  */
 template <typename Iter>
+using is_iterable_t = typename Iter::iterator;
+template <typename Iter>
 using is_iterable = is_detected<is_iterable_t, Iter>;
-/**
- * @brief equal to true if type is an iterable
- *
- * @tparam Iter, potential iterable type
- */
 template <typename Iter>
 inline constexpr bool is_iterable_v = is_iterable<Iter>::value;
 
